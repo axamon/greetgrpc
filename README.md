@@ -1,0 +1,1 @@
+greetrpc serve a testare le potenzialità di gRPC
