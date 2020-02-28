@@ -11,10 +11,11 @@ import (
 	"github.com/axamon/greet/greetpb"
 	"google.golang.org/grpc"
 
+	"google.golang.org/grpc/credentials"
 	_ "google.golang.org/grpc/encoding/gzip" // Install the gzip compressor
 )
 
-var version = "0.1.2"
+var version = "0.1.5"
 
 type server struct{}
 
@@ -41,7 +42,12 @@ func main() {
 		log.Fatalf("Failed to listen: %v", err)
 	}
 
-	s := grpc.NewServer()
+	certFile, keyFile := "server.crt", "server.key"
+	creds, err := credentials.NewServerTLSFromFile(certFile, keyFile)
+	if err != nil {
+		log.Fatal(err)
+	}
+	s := grpc.NewServer(grpc.Creds(creds))
 	greetpb.RegisterGreetServiceServer(s, &server{})
 
 	if err := s.Serve(lis); err != nil {

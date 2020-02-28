@@ -8,10 +8,11 @@ import (
 
 	"github.com/axamon/greet/greetpb"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/encoding/gzip"
 )
 
-var version = "0.1.2"
+var version = "0.1.5"
 
 func main() {
 
@@ -22,10 +23,17 @@ func main() {
 
 	fmt.Printf("Client version %s\n", version)
 
+	certFile := "server.crt"
+	creds, err := credentials.NewClientTLSFromFile(certFile, "")
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	cc, err := grpc.Dial(
 		*addr,
-		grpc.WithCompressor(grpc.NewGZIPCompressor()),
-		grpc.WithInsecure(),
+		// grpc.WithCompressor(grpc.NewGZIPCompressor()),
+		// grpc.WithInsecure(),
+		grpc.WithTransportCredentials(creds),
 	)
 	if err != nil {
 		log.Fatalf("could not connect to server: %v", err)
@@ -45,7 +53,7 @@ func doUnary(ctx context.Context, c greetpb.GreetServiceClient, name *string) {
 
 	resp, err := c.Greet(ctx, req, grpc.UseCompressor(gzip.Name))
 	if err != nil {
-		log.Fatalf("response in error: %v\n", resp)
+		log.Fatalf("response %v in error: %v\n", resp, err)
 	}
 	log.Printf("response from greet: %v", resp.Result)
 }
