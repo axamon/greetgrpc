@@ -8,7 +8,7 @@ import (
 	"net"
 	"strings"
 
-	"github.com/axamon/greet/greetpb"
+	"github.com/axamon/greetgrpc/greetpb"
 	"google.golang.org/grpc"
 
 	"google.golang.org/grpc/credentials"
