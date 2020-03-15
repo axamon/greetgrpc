@@ -1,4 +1,4 @@
-module github.com/axamon/greet
+module github.com/axamon/greetgrpc
 
 go 1.13
 
