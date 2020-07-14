@@ -12,18 +12,20 @@ import (
 	"google.golang.org/grpc/encoding/gzip"
 )
 
-var version = "0.1.5"
+var version = "0.1.6"
 
 func main() {
 
 	ctx := context.Background()
 	var addr = flag.String("addr", "localhost:50051", "Address of the gRPC server")
 	var name = flag.String("name", "Gringo", "Firstname to greet")
+	var serverFile = flag.String("cert", "server.crt", "Certificato server")
+
 	flag.Parse()
 
 	fmt.Printf("Client version %s\n", version)
 
-	certFile := "server.crt"
+	certFile := *serverFile
 	creds, err := credentials.NewClientTLSFromFile(certFile, "")
 	if err != nil {
 		log.Fatal(err)
