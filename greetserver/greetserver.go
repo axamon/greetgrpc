@@ -15,7 +15,7 @@ import (
 	_ "google.golang.org/grpc/encoding/gzip" // Install the gzip compressor
 )
 
-var version = "0.1.5"
+var version = "0.1.6"
 
 type server struct{}
 
@@ -32,6 +32,8 @@ func (*server) Greet(ctx context.Context, req *greetpb.GreetRequest) (*greetpb.G
 func main() {
 
 	var addr = flag.String("addr", "0.0.0.0:50051", "Server address")
+	var serverCert = flag.String("cert", "server.crt", "Server certificate")
+	var serverKey = flag.String("key", "server.key", "Server key")
 
 	flag.Parse()
 
@@ -42,7 +44,7 @@ func main() {
 		log.Fatalf("Failed to listen: %v", err)
 	}
 
-	certFile, keyFile := "server.crt", "server.key"
+	certFile, keyFile := *serverCert, *serverKey
 	creds, err := credentials.NewServerTLSFromFile(certFile, keyFile)
 	if err != nil {
 		log.Fatal(err)
